@@ -42,7 +42,7 @@ Sử dụng các Flag (tham số) sau để điều khiển tool:
 
 ---
 
-## 💡 Mẹo nhỏ cho Windows (Quick Run)
+## Windows (Quick Run)
 Bạn có thể tạo một file tên là `run.bat` trong cùng thư mục với nội dung sau để chạy nhanh bằng cách click đúp:
 
 ```batch
