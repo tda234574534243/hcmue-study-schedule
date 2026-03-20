@@ -19,7 +19,7 @@ Công cụ hỗ trợ lấy và hiển thị thời khóa biểu từ hệ thố
 Chạy script setup để khởi tạo thông tin đăng nhập và API Key:
 `python setup.py`
 
-> **Lưu ý:** Bạn cần lấy `API_KEY` và `CLIENT_ID` từ Network tab (F12) trên trang web của trường khi đăng nhập. Script sẽ tự động lưu vào file `.env`.
+> **Lưu ý:** Bạn có thể cần lấy `API_KEY` và `CLIENT_ID` từ Network tab (F12) trên trang web của trường khi đăng nhập. Script sẽ tự động lưu vào file `.env` . Hoặc ko bạn có thể dùng apikey trong env.example
 
 ---
 
