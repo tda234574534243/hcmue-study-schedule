@@ -1,7 +1,5 @@
 # 📅 HCMUE Schedule Tool (TKB)
-
 Công cụ hỗ trợ lấy và hiển thị thời khóa biểu từ hệ thống **HCMUE** dành cho sinh viên.
----
 
 ## 🛠 Cài đặt & Thiết lập
 
