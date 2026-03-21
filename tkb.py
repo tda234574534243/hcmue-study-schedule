@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 from datetime import datetime, timedelta
 from tabulate import tabulate
 
-load_dotenv()
+load_dotenv(override=True)
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 # --- CONFIG ---
@@ -50,16 +50,49 @@ def extract_ca_number(ca_str):
     return int(match.group()) if match else 0
 
 def get_access_token():
+    # 1. Kiểm tra file token cũ
     if os.path.exists(TOKEN_FILE):
-        with open(TOKEN_FILE, 'r') as f: return json.load(f).get('token')
+        print(f"[*] Đang dùng lại Token cũ từ file: {TOKEN_FILE}")
+        with open(TOKEN_FILE, 'r') as f: 
+            return json.load(f).get('token')
+    
+    # 2. Nếu không có file, tiến hành đăng nhập mới
     url = "https://onlineapi.hcmue.edu.vn/api/authenticate/authpsc"
-    headers = {"Content-Type": "application/json", "Apikey": API_KEY, "Clientid": CLIENT_ID}
+    headers = {
+        "Content-Type": "application/json", 
+        "Apikey": API_KEY, 
+        "Clientid": CLIENT_ID
+    }
+    
+    # Debug xem gửi cái gì đi
+    print(f"[*] Đang đăng nhập tài khoản: {USERNAME}")
+    
     try:
-        res = requests.post(url, json={"username": USERNAME, "password": PASSWORD}, headers=headers, verify=False)
-        token = res.json().get("Token")
-        with open(TOKEN_FILE, 'w') as f: json.dump({'token': token}, f)
-        return token
-    except: return None
+        payload = {"username": USERNAME, "password": PASSWORD}
+        res = requests.post(url, json=payload, headers=headers, verify=False, timeout=10)
+        
+        # --- KHÚC DEBUG QUAN TRỌNG ---
+        print(f"[*] Server Response Code: {res.status_code}")
+        
+        if res.status_code == 200:
+            data = res.json()
+            token = data.get("Token")
+            if token:
+                print("[OK] Đăng nhập thành công! Đã lấy được Token mới.")
+                with open(TOKEN_FILE, 'w') as f: 
+                    json.dump({'token': token}, f)
+                return token
+            else:
+                print("[!] Đăng nhập thành công nhưng không thấy Token trong JSON trả về.")
+                print(f"[*] Body nhận được: {data}")
+        else:
+            print(f"[!] Đăng nhập thất bại. Mã lỗi: {res.status_code}")
+            print(f"[*] Nội dung lỗi: {res.text}")
+            
+    except Exception as e:
+        print(f"[!] Lỗi kết nối khi đăng nhập: {e}")
+    
+    return None
 
 def show_next_class(filtered):
     now = datetime.now()
